@@ -41,7 +41,7 @@ let fbToken;
 
 //listens for facebook tab url to update after login using facebook screen
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (tab.url === "https://m.facebook.com/v3.2/dialog/oauth/confirm/" && tab.status == "complete") {
+    if (tab.url === "https://m.facebook.com/v3.3/dialog/oauth/confirm/" && tab.status == "complete") {
         console.log('update function', tab)
         chrome.tabs.executeScript(tab.id, { file: "/facebook.js" });
     }
@@ -66,10 +66,10 @@ chrome.runtime.onMessage.addListener(function (msg, sender, data) {
 
 
 /*
-simplified graph request. No need to post to "https://m.facebook.com/v3.2/dialog/oauth/confirm" with jazoest and fb_dtsg payload
+simplified graph request. No need to post to "https://m.facebook.com/v3.3/dialog/oauth/confirm" with jazoest and fb_dtsg payload
 */
 function validatefbToken() {
-    var fbUrl = "https://graph.facebook.com/v3.2/me?access_token=" + fbToken + "&fields=id%2Cname%2Cfirst_name%2Clast_name%2Cinstalled%2Cemail%2Cpicture.type(small)&format=json&sdk=android";
+    var fbUrl = "https://graph.facebook.com/v3.3/me?access_token=" + fbToken + "&fields=id%2Cname%2Cfirst_name%2Clast_name%2Cinstalled%2Cemail%2Cpicture.type(small)&format=json&sdk=android";
     chrome.runtime.sendMessage({ type: "started", data: "facebookId" });
     $.get(fbUrl)
         .done(function (fbResponse) {
@@ -81,7 +81,7 @@ function validatefbToken() {
 
 
 
-var requestFilter = { urls: ["https://m.facebook.com/v3.2/dialog/oauth/confirm"] };
+var requestFilter = { urls: ["https://m.facebook.com/v3.3/dialog/oauth/confirm"] };
 var extraInfoSpec = ["requestHeaders", "blocking", "extraHeaders"];
 if (getBrowser() === 'Firefox') {
     extraInfoSpec = ["requestHeaders", "blocking"];
