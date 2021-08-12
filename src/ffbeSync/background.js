@@ -41,7 +41,7 @@ let fbToken;
 
 //listens for facebook tab url to update after login using facebook screen
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (tab.url === "https://m.facebook.com/v3.3/dialog/oauth/confirm/" && tab.status == "complete") {
+    if (tab.url === "https://m.facebook.com/v4.0/dialog/oauth/confirm/" && tab.status == "complete") {
         console.log('update function', tab)
         chrome.tabs.executeScript(tab.id, { file: "/facebook.js" });
     }
@@ -66,10 +66,10 @@ chrome.runtime.onMessage.addListener(function (msg, sender, data) {
 
 
 /*
-simplified graph request. No need to post to "https://m.facebook.com/v3.3/dialog/oauth/confirm" with jazoest and fb_dtsg payload
+simplified graph request. No need to post to "https://m.facebook.com/v4.0/dialog/oauth/confirm" with jazoest and fb_dtsg payload
 */
 function validatefbToken() {
-    var fbUrl = "https://graph.facebook.com/v3.3/me?access_token=" + fbToken + "&fields=id%2Cname%2Cfirst_name%2Clast_name%2Cinstalled%2Cemail%2Cpicture.type(small)&format=json&sdk=android";
+    var fbUrl = "https://graph.facebook.com/v4.0/me?access_token=" + fbToken + "&fields=id%2Cname%2Cfirst_name%2Clast_name%2Cinstalled%2Cemail%2Cpicture.type(small)&format=json&sdk=android";
     chrome.runtime.sendMessage({ type: "started", data: "facebookId" });
     $.get(fbUrl)
         .done(function (fbResponse) {
@@ -81,7 +81,7 @@ function validatefbToken() {
 
 
 
-var requestFilter = { urls: ["https://m.facebook.com/v3.3/dialog/oauth/confirm"] };
+var requestFilter = { urls: ["https://m.facebook.com/v4.0/dialog/oauth/confirm"] };
 var extraInfoSpec = ["requestHeaders", "blocking", "extraHeaders"];
 if (getBrowser() === 'Firefox') {
     extraInfoSpec = ["requestHeaders", "blocking"];
@@ -305,8 +305,6 @@ async function getUserData(accountId, authToken, isGoogle) {
         const data = await getAuthenticationPayload(accountId, authToken, isGoogle, loginKey);
         const data_1 = await callActionSymbol(loginUrlSymbol, loginKey, data);
         const data_2 = await getLoginToken(accountId, authToken, isGoogle, data_1);
-        // const data_3 = await sendMessage('finished', 'ffbeConnect', data_2);
-        // return await wait1s(data_3);
         return await sendMessage('finished', 'ffbeConnect', data_2);
     }
     const initialAuthentication = await getInitialAuthentication()
@@ -316,8 +314,6 @@ async function getUserData(accountId, authToken, isGoogle) {
         const data_1 = await getUserInfoRequestPayload(userInfo1Key, userInfo1PayloadKey, data);
         const data_2 = await callActionSymbol(userInfo1UrlSymbol, userInfo1Key, data_1);
         const data_3 = await saveResponseAs('userData', data_2);
-        // const data_4 = await sendMessage('finished', 'ffbeUserData', data_3);
-        // return await wait1s(data_4);
         return await sendMessage('finished', 'ffbeUserData', data_3);
     }
     const userData1 = await getUserData1(initialAuthentication)
@@ -329,7 +325,6 @@ async function getUserData(accountId, authToken, isGoogle) {
         const data_3 = await saveResponseAs('userData2', data_2);
         const data_4 = await sendMessage('finished', 'ffbeUserData2', data_3);
         return await wait1s(data_4);
-        // return await sendMessage('finished', 'ffbeUserData2', data_3);
     }
     const userData2 = await getUserData2(userData1)
 
