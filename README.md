@@ -2,6 +2,7 @@
 A Chrome extension to get your user data out of Final Fantasy Brave Exvius
 
 To install from here in Chrome Browser:
+
 1)click the green 'Code' button and 'Download ZIP'
 
 2)navigate to the downloaded file and unzip into whatever folder you wish.
